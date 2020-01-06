@@ -28,6 +28,8 @@ if __name__ == '__main__':
     argParser = argparse.ArgumentParser(description='python arguments')
     argParser.add_argument('-cuda',type=int ,help='cuda device id')
     argParser.add_argument('-zdim',type=int,help='z dimention')
+    argParser.add_argument('-dataset',type=int)
+    argParser.add_argument('-dataIndex',type=int)
     argParser.add_argument('-dropout',type=float ,help='dropout p',default=0)
     args = argParser.parse_args()
     
@@ -43,12 +45,18 @@ if __name__ == '__main__':
     if args.dropout >=1 or args.dropout <0:
         print('dropout p should be [0,1). Program exit')
         exit(-2)
+    if args.dataset ==None or args.dataset < 0:
+        print('dataset number error! Program exit')
+        exit(-2)
+    if args.dataIndex ==None or args.dataIndex < 0:
+        print('dataIndex number error! Program exit')
+        exit(-2)
 
     TestOrTrain = 'train'
     saveThisExper = False
 
-    E_dataset_path = '/home/hsc/Research/StateMapPrediction/datas/fake/EastGate/data5'
-    SE_dataset_path = '/home/hsc/Research/StateMapPrediction/datas/fake/SouthEastGate/data5'
+    E_dataset_path = '/home/hsc/Research/StateMapPrediction/datas/fake/EastGate/data' + str(args.dataset)
+    SE_dataset_path = '/home/hsc/Research/StateMapPrediction/datas/fake/SouthEastGate/data' + str(args.dataset)
 
 
     device = 'cuda:' + str(args.cuda)
@@ -87,14 +95,16 @@ if __name__ == '__main__':
         os.makedirs(modelParamFolder)
 
         # 加载数据集
-        fakeSingleTrainsets = [FakeDeltaTDataset(E_dataset_path,SE_dataset_path,i,train = True) for i in range(-4,5)]
+        fakeSingleTrainsets = [FakeDeltaTDataset(E_dataset_path,SE_dataset_path,i,args.dataIndex,train = True) for i in range(-4,5)]
         
-        fakeSingleTestset = FakeDeltaTDataset(E_dataset_path,SE_dataset_path,0,train = False)
+        fakeSingleTestset = FakeDeltaTDataset(E_dataset_path,SE_dataset_path,0,args.dataIndex,train = False)
         fakeSingleTestLoader = DataLoader(fakeSingleTestset,batch_size=4,shuffle=True)
         
         print('device = ',device)
         print('z-dim = ',args.zdim)
+        print('dataset number = ',args.dataset)
         print('dropout = ',args.dropout)
+        print('dataIndex = ',args.dataIndex)
 
         # 加载模型
         EastModel = BehaviorModelAutoEncoder(args.zdim , args.dropout)

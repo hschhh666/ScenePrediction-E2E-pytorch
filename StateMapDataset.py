@@ -302,14 +302,17 @@ class typicalTestData(Dataset):
 
 
 class FakeDeltaTDataset(Dataset):
-    def __init__(self,E_path,SE_path,deltaT,train = True):
+    def __init__(self,E_path,SE_path,deltaT, dataIndex, train = True):
         self.train = train
         self.E_path = E_path
         self.SE_path = SE_path
-        eastIndex = [i*30 + j for i in range(24) for j in [1,10,20] ]
-        southEastIndex = [i*60 + 30 + j for i in range(12) for j in [1,10,20] ]
+        # eastIndex = [i*30 + j for i in range(24) for j in [1,10,20] ]
+        # southEastIndex = [i*60 + 30 + j for i in range(12) for j in [1,10,20] ]
         # eastIndex = [i*30 + j for i in range(27) for j in [23,24,25,26,27] ]
         # southEastIndex = [i*30 + j for i in range(27) for j in [23,24,25,26,27] ]
+        dataIndexs = np.load('/home/hsc/Research/StateMapPrediction/datas/dataIndex/' + str(dataIndex) + '.npy',allow_pickle=True)
+        eastIndex = dataIndexs[0]
+        southEastIndex = dataIndexs[1]
         eastIndex = np.array(eastIndex)
         southEastIndex = np.array(southEastIndex)
 
