@@ -22,6 +22,7 @@ import itertools
 from tensorboardX import SummaryWriter
 import argparse
 
+
 if __name__ == '__main__':
 
 
@@ -32,7 +33,6 @@ if __name__ == '__main__':
     argParser.add_argument('-dataIndex',type=int)
     argParser.add_argument('-dropout',type=float ,help='dropout p',default=0)
     args = argParser.parse_args()
-    
     if args.cuda == None or args.zdim == None:
         print('[Error] No parameter. Program exit')
         exit(-2)
@@ -97,7 +97,7 @@ if __name__ == '__main__':
         # 加载数据集
         fakeSingleTrainsets = [FakeDeltaTDataset(E_dataset_path,SE_dataset_path,i,args.dataIndex,train = True) for i in range(-4,5)]
         
-        fakeSingleTestset = FakeDeltaTDataset(E_dataset_path,SE_dataset_path,0,args.dataIndex,train = False)
+        fakeSingleTestset = FakeDeltaTDataset(E_dataset_path,SE_dataset_path,0,args.dataIndex, train = False)
         fakeSingleTestLoader = DataLoader(fakeSingleTestset,batch_size=4,shuffle=True)
         
         print('device = ',device)
@@ -105,6 +105,7 @@ if __name__ == '__main__':
         print('dataset number = ',args.dataset)
         print('dropout = ',args.dropout)
         print('dataIndex = ',args.dataIndex)
+
 
         # 加载模型
         EastModel = BehaviorModelAutoEncoder(args.zdim , args.dropout)
@@ -120,6 +121,8 @@ if __name__ == '__main__':
         theta2 = theta2.cuda(device = device)
         theta3 = theta3.cuda(device = device)
         
+
+
         criterion = nn.MSELoss()
         # optimizer = optim.SGD(itertools.chain(EastModel.parameters(),SouthEastModel.parameters()),lr = 0.001,momentum=0.9)
         # optimizer = optim.Adam(itertools.chain(EastModel.parameters(),SouthEastModel.parameters()),lr = 0.001)
@@ -136,7 +139,7 @@ if __name__ == '__main__':
         minPredictionLoss = np.inf
 
         # 2000个epoch
-        for epoch in range(2000):
+        for epoch in range(1000):
 
             running_loss = running_loss1 = running_loss2 = running_loss3 = 0
             count = 0
