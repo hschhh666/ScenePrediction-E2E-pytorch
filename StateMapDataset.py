@@ -319,13 +319,14 @@ class FakeDeltaTDataset(Dataset):
         for i in eastIndex:
             paired = False
             M = int((i-1)/self.TimeInterval) + 1
-            for j in [M + deltaT, M - deltaT]:
-                startIdx = (j-1)*self.TimeInterval + 1
-                southEastTmpIdx = southEastIndex[np.logical_and(startIdx <= southEastIndex,southEastIndex <= (startIdx + self.TimeInterval-1) )]
-                paired = True if len(southEastTmpIdx)>0 else False
-                if paired:
-                    self.eastIndex.append(i)
-                    break
+            # for j in [M + deltaT, M - deltaT]:
+            j = M + deltaT
+            startIdx = (j-1)*self.TimeInterval + 1
+            southEastTmpIdx = southEastIndex[np.logical_and(startIdx <= southEastIndex,southEastIndex <= (startIdx + self.TimeInterval-1) )]
+            paired = True if len(southEastTmpIdx)>0 else False
+            if paired:
+                self.eastIndex.append(i)
+                # break
         
         self.eastIndex = np.array(self.eastIndex)
         pass
@@ -349,15 +350,17 @@ class FakeDeltaTDataset(Dataset):
             resultSouthEastIdx = -1
 
             M = int((resultEastIdx-1)/self.TimeInterval) + 1
-            M = [M + self.deltaT, M - self.deltaT]
-            random.shuffle(M)
-            for m in M:
-                startIdx = (m-1)*self.TimeInterval + 1
-                southEastTmpIdx = self.southEastIndex[np.logical_and(startIdx <= self.southEastIndex,self.southEastIndex <= (startIdx + self.TimeInterval - 1) )]
-                if len(southEastTmpIdx) >0:
-                    random.shuffle(southEastTmpIdx)
-                    resultSouthEastIdx = southEastTmpIdx[0]
-                    break
+            # M = [M + self.deltaT, M - self.deltaT]
+            M = M + self.deltaT
+            # random.shuffle(M)
+            # for m in M:
+            m = M
+            startIdx = (m-1)*self.TimeInterval + 1
+            southEastTmpIdx = self.southEastIndex[np.logical_and(startIdx <= self.southEastIndex,self.southEastIndex <= (startIdx + self.TimeInterval - 1) )]
+            if len(southEastTmpIdx) >0:
+                random.shuffle(southEastTmpIdx)
+                resultSouthEastIdx = southEastTmpIdx[0]
+                # break
         
 
         E_npy = 'East_M%d_P0.npy'%(resultEastIdx)
