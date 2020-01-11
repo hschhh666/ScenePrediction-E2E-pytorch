@@ -95,7 +95,7 @@ if __name__ == '__main__':
         os.makedirs(modelParamFolder)
 
         # 加载数据集
-        fakeSingleTrainsets = [FakeDeltaTDataset(E_dataset_path,SE_dataset_path,i,args.dataIndex,train = True) for i in range(-4,5)]
+        fakeSingleTrainsets = [FakeDeltaTDataset(E_dataset_path,SE_dataset_path,i,args.dataIndex,train = True) for i in range(1)]
         
         fakeSingleTestset = FakeDeltaTDataset(E_dataset_path,SE_dataset_path,0,args.dataIndex, train = False)
         fakeSingleTestLoader = DataLoader(fakeSingleTestset,batch_size=4,shuffle=True)
@@ -105,6 +105,7 @@ if __name__ == '__main__':
         print('dataset number = ',args.dataset)
         print('dropout = ',args.dropout)
         print('dataIndex = ',args.dataIndex)
+        print('no deltaT input, totally end-to-end')
 
 
         # 加载模型
@@ -149,7 +150,7 @@ if __name__ == '__main__':
             lossList = []
 
             # 训练
-            for i in range(9):
+            for i in range(1):
                 if fakeSingleTrainsets[i].__len__()>0:
                     fakeSingleTrainLoader = DataLoader(fakeSingleTrainsets[i],batch_size=4,shuffle=True)
                 else:

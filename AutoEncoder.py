@@ -32,7 +32,7 @@ class BehaviorModelAutoEncoder(nn.Module):
         self.fc1 = nn.Linear(8*64*64,100)
         self.fc2 = nn.Linear(100,zdim)
 
-        self.fc3 = nn.Linear(zdim + 1,100)
+        self.fc3 = nn.Linear(zdim,100)
         self.fc4 = nn.Linear(100,500)
         self.fc5 = nn.Linear(500,8*64*64)
 
@@ -68,7 +68,7 @@ class BehaviorModelAutoEncoder(nn.Module):
         return x
 
     def decoder(self,x,deltaT):
-        x = torch.cat((x,deltaT),1)
+        # x = torch.cat((x,deltaT),1)
         x = F.relu(self.fc3(x))
         x = self.dropout(x)
         x = F.relu(self.fc4(x))
